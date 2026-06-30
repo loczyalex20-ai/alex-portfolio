@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alex — Web Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #080810;
+    --bg2: #0F0F1A;
+    --card: #131325;
+    --border: rgba(120,100,255,0.15);
+    --accent: #7B5CFA;
+    --accent2: #A78BFA;
+    --white: #F2F0FF;
+    --muted: #8880AA;
+    --tag: rgba(123,92,250,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    padding: 20px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(8,8,16,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px; font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--white);
+  }
+  .logo span {
+    color: var(--accent);
+  }
+
+  /* language switcher */
+  .lang-switcher {
+    display: flex; gap: 6px;
+  }
+  .lang-btn {
+    background: none; border: 1px solid var(--border);
+    color: var(--muted); font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    padding: 5px 12px; border-radius: 20px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .lang-btn:hover, .lang-btn.active {
+    background: var(--accent); border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 120px 60px 80px;
+    position: relative; z-index: 1;
+  }
+
+  /* grid lines background */
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0; z-index: -1;
+    background-image:
+      linear-gradient(rgba(123,92,250,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(123,92,250,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 40%, transparent 100%);
+  }
+
+  .hero-tag {
+    display: inline-block;
+    background: var(--tag); border: 1px solid var(--border);
+    color: var(--accent2); font-size: 12px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 20px;
+    margin-bottom: 32px;
+  }
+
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(42px, 7vw, 88px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    max-width: 900px;
+    margin-bottom: 28px;
+  }
+
+  .hero h1 .grad {
+    background: linear-gradient(135deg, #7B5CFA 0%, #A78BFA 40%, #C4B5FD 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 18px; color: var(--muted);
+    max-width: 500px; margin-bottom: 48px;
+    line-height: 1.7;
+  }
+
+  .hero-cta {
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px; font-weight: 600;
+    padding: 14px 28px; border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none; cursor: pointer;
+  }
+  .btn-primary:hover { background: #6748E8; transform: translateY(-1px); }
+
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: var(--white);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px; font-weight: 500;
+    padding: 14px 28px; border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent2); }
+
+  /* scroll indicator */
+  .scroll-hint {
+    position: absolute; bottom: 40px; left: 60px;
+    display: flex; align-items: center; gap: 12px;
+    color: var(--muted); font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 40px; height: 1px; background: var(--muted);
+    animation: expand 2s ease-in-out infinite;
+  }
+  @keyframes expand {
+    0%, 100% { width: 40px; opacity: 0.5; }
+    50% { width: 70px; opacity: 1; }
+  }
+
+  /* ── SECTIONS ── */
+  section { position: relative; z-index: 1; }
+
+  .section-label {
+    display: flex; align-items: center; gap: 16px;
+    color: var(--accent); font-size: 12px; font-weight: 600;
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700; letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+
+  /* ── ABOUT ── */
+  .about {
+    padding: 100px 60px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  }
+
+  .about-text p {
+    color: var(--muted); font-size: 17px; line-height: 1.8;
+    margin-bottom: 20px;
+  }
+  .about-text p strong { color: var(--white); }
+
+  .about-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: var(--accent); }
+  .stat-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 36px; font-weight: 700;
+    background: linear-gradient(135deg, #7B5CFA, #A78BFA);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-label { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+  /* ── WORK ── */
+  .work { padding: 100px 60px; }
+
+  .work-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    margin-top: 60px;
+  }
+
+  .project-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+    cursor: default;
+  }
+  .project-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent);
+  }
+
+  .card-preview {
+    height: 200px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .card-preview:hover { opacity: 0.85; }
+
+  /* unique gradient per card */
+  .card-preview.cafe {
+    background: linear-gradient(135deg, #2C1A0E 0%, #C17A30 60%, #F7EDD8 100%);
+  }
+  .card-preview.barber {
+    background: linear-gradient(135deg, #111 0%, #222 40%, #C41E3A 100%);
+  }
+  .card-preview.store {
+    background: linear-gradient(135deg, #0A0A1A 0%, #1A1A3E 50%, #4040AA 100%);
+  }
+
+  .card-preview-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
+    color: rgba(255,255,255,0.9);
+    text-align: center; padding: 20px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  }
+
+  /* browser mockup dots */
+  .card-preview::before {
+    content: '● ● ●';
+    position: absolute; top: 12px; left: 16px;
+    font-size: 8px; color: rgba(255,255,255,0.3);
+    letter-spacing: 4px;
+  }
+
+  .card-body { padding: 24px; }
+  .card-type {
+    display: inline-block;
+    background: var(--tag); color: var(--accent2);
+    font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 6px;
+    margin-bottom: 12px;
+  }
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px; font-weight: 700; letter-spacing: -0.3px;
+    margin-bottom: 8px;
+  }
+  .card-desc { color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+  .card-footer {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .tech-tag {
+    background: rgba(255,255,255,0.04); color: var(--muted);
+    font-size: 11px; padding: 3px 10px; border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  .card-link {
+    margin-left: auto;
+    color: var(--accent2); font-size: 12px; font-weight: 600;
+    text-decoration: none; letter-spacing: 0.3px;
+    transition: color 0.2s;
+  }
+  .card-link:hover { color: var(--accent); }
+
+  /* ── SERVICES ── */
+  .services { padding: 100px 60px; }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    margin-top: 60px;
+  }
+  .service-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 32px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .service-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .service-icon { font-size: 28px; margin-bottom: 16px; }
+  .service-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px; font-weight: 700; margin-bottom: 10px;
+  }
+  .service-desc { color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+  /* ── CONTACT ── */
+  .contact {
+    padding: 100px 60px;
+    text-align: center;
+  }
+  .contact-box {
+    max-width: 600px; margin: 60px auto 0;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 60px 48px;
+  }
+  .contact-box p { color: var(--muted); font-size: 17px; margin-bottom: 40px; line-height: 1.7; }
+  .contact-links {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+  }
+  .contact-link {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--tag); border: 1px solid var(--border);
+    color: var(--white); font-size: 15px; font-weight: 500;
+    padding: 14px 24px; border-radius: 10px;
+    text-decoration: none; transition: all 0.2s;
+  }
+  .contact-link:hover { border-color: var(--accent); color: var(--accent2); }
+  .contact-link .icon { font-size: 18px; }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 1;
+    padding: 32px 60px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--muted); font-size: 13px;
+  }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .hero { padding: 100px 24px 60px; }
+    .hero h1 { font-size: 40px; letter-spacing: -1px; }
+    .scroll-hint { left: 24px; }
+    .about { padding: 80px 24px; grid-template-columns: 1fr; gap: 40px; }
+    .work { padding: 80px 24px; }
+    .work-grid { grid-template-columns: 1fr; }
+    .services { padding: 80px 24px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .contact { padding: 80px 24px; }
+    footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+
+  /* ══════════════════════════
+     INQUIRY / QUESTIONNAIRE
+  ══════════════════════════ */
+  .inquiry { padding: 100px 60px; border-top: 1px solid var(--border); }
+
+  .inquiry-wrap {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 52px;
+    margin-top: 60px;
+    align-items: start;
+  }
+
+  /* Form box */
+  .iq-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px;
+    transition: opacity 0.4s;
+  }
+
+  /* Form sections */
+  .iq-sec {
+    margin-bottom: 36px;
+    padding-bottom: 36px;
+    border-bottom: 1px solid var(--border);
+  }
+  .iq-sec:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .iq-sec-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .iq-sec-title::before {
+    content: ''; width: 18px; height: 1px; background: var(--accent);
+  }
+
+  /* Text inputs */
+  .iq-grp { margin-bottom: 18px; }
+  .iq-lbl {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .iq-lbl .req { color: var(--accent); margin-left: 3px; }
+  .iq-sub-lbl {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--white); margin-bottom: 10px; margin-top: 18px;
+  }
+  .iq-hint {
+    font-size: 12px; line-height: 1.5;
+    color: var(--muted); margin: -6px 0 12px;
+  }
+  .iq-input {
+    width: 100%;
+    background: rgba(123,92,250,0.05);
+    border: 1.5px solid rgba(120,100,255,0.22);
+    border-radius: 10px;
+    padding: 13px 16px;
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    transition: all 0.2s;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  .iq-input:focus {
+    border-color: var(--accent);
+    background: rgba(123,92,250,0.1);
+    box-shadow: 0 0 0 3px rgba(123,92,250,0.13);
+  }
+  .iq-input.err { border-color: #FF4466; box-shadow: 0 0 0 3px rgba(255,68,102,0.12); }
+  .iq-input::placeholder { color: var(--muted); opacity: 0.6; }
+  .iq-err { font-size: 11px; color: #FF4466; margin-top: 5px; display: none; }
+  .iq-err.show { display: block; }
+
+  /* Radio options */
+  .radio-grp { display: flex; flex-direction: column; gap: 8px; }
+  .radio-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .radio-opt {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: rgba(123,92,250,0.04);
+    border: 1.5px solid rgba(120,100,255,0.18);
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.18s;
+    user-select: none;
+  }
+  .radio-opt:hover {
+    border-color: rgba(123,92,250,0.4);
+    background: rgba(123,92,250,0.08);
+  }
+  .radio-opt input[type="radio"] { display: none; }
+  .radio-dot {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid rgba(120,100,255,0.4);
+    flex-shrink: 0; margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.18s;
+  }
+  .radio-dot::after {
+    content: ''; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    opacity: 0; transform: scale(0.4); transition: all 0.18s;
+  }
+  .radio-opt.sel { border-color: var(--accent); background: rgba(123,92,250,0.12); }
+  .radio-opt.sel .radio-dot { border-color: var(--accent); }
+  .radio-opt.sel .radio-dot::after { opacity: 1; transform: scale(1); }
+
+  .ro-main { font-size: 14px; font-weight: 500; color: var(--white); }
+  .ro-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* Checkbox chips */
+  .check-grp { display: flex; flex-wrap: wrap; gap: 8px; }
+  .check-opt {
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(123,92,250,0.04);
+    border: 1.5px solid rgba(120,100,255,0.18);
+    border-radius: 8px; padding: 8px 13px;
+    cursor: pointer; transition: all 0.18s;
+    user-select: none;
+    font-size: 13px; font-weight: 500; color: var(--muted);
+  }
+  .check-opt:hover { border-color: rgba(123,92,250,0.4); color: var(--white); }
+  .check-opt input[type="checkbox"] { display: none; }
+  .check-box {
+    width: 14px; height: 14px; border-radius: 3px;
+    border: 2px solid rgba(120,100,255,0.4);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 9px; transition: all 0.18s;
+  }
+  .check-opt.chkd { border-color: var(--accent); background: rgba(123,92,250,0.15); color: var(--white); }
+  .check-opt.chkd .check-box { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* Upload boxes (logo / photos) */
+  .upload-wrap { display: none; margin-top: 12px; }
+  .upload-wrap.show { display: block; }
+  .upload-box {
+    position: relative;
+    border: 1.5px dashed rgba(120,100,255,0.35);
+    border-radius: 10px;
+    padding: 16px 18px;
+    background: rgba(123,92,250,0.04);
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .upload-box:hover { border-color: var(--accent); background: rgba(123,92,250,0.08); }
+  .upload-box input[type="file"] {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    opacity: 0; cursor: pointer;
+  }
+  .upload-box-txt {
+    font-size: 13px; font-weight: 600; color: var(--white);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .upload-box-hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .upload-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .upload-thumb {
+    width: 56px; height: 56px; border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--border); position: relative;
+  }
+  .upload-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* Send button */
+  .iq-btn {
+    width: 100%; margin-top: 16px;
+    background: linear-gradient(135deg, #7B5CFA 0%, #A78BFA 100%);
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px; font-weight: 700;
+    padding: 18px 28px; border-radius: 12px; border: none;
+    cursor: pointer; transition: all 0.25s;
+    letter-spacing: 0.5px;
+    box-shadow: 0 6px 28px rgba(123,92,250,0.35);
+  }
+  .iq-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(123,92,250,0.55);
+    background: linear-gradient(135deg, #8B6CFF 0%, #B899FF 100%);
+  }
+  .iq-btn:disabled { opacity: 0.28; cursor: not-allowed; transform: none; box-shadow: none; }
+  .iq-btn:active:not(:disabled) { transform: translateY(0); }
+
+  /* Success */
+  .iq-success { display: none; text-align: center; padding: 52px 0 28px; }
+  .iq-success.show { display: block; }
+  .iq-success-icon { font-size: 54px; margin-bottom: 16px; }
+  .iq-success-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px; font-weight: 700; margin-bottom: 8px;
+    background: linear-gradient(135deg, #7B5CFA, #A78BFA);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .iq-success-sub { color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+  /* ── Preview column ── */
+  .pv-col { position: sticky; top: 100px; }
+  .pv-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--muted);
+    text-align: center; margin-bottom: 14px;
+  }
+  .pv-card {
+    background: var(--bg2);
+    border: 1.5px solid rgba(120,100,255,0.18);
+    border-radius: 20px; padding: 32px;
+    transition: border-color 0.4s, box-shadow 0.4s;
+  }
+  .pv-card.alive {
+    border-color: rgba(123,92,250,0.5);
+    box-shadow: 0 0 60px rgba(123,92,250,0.09), 0 24px 64px rgba(0,0,0,0.3);
+  }
+
+  .pv-head {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 20px; padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pv-av {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: linear-gradient(135deg, #7B5CFA, #A78BFA);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px; font-weight: 700; color: #fff;
+    flex-shrink: 0; transition: all 0.3s;
+  }
+  .pv-n { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: var(--white); min-height: 22px; }
+  .pv-b { font-size: 12px; color: var(--accent2); margin-top: 2px; font-weight: 500; }
+
+  .pv-row {
+    display: flex; gap: 10px; padding: 9px 0;
+    border-bottom: 1px solid rgba(120,100,255,0.07);
+    opacity: 0.25; transition: opacity 0.3s;
+  }
+  .pv-row.on { opacity: 1; }
+  .pv-row:last-of-type { border-bottom: none; }
+  .pv-ico { font-size: 14px; width: 20px; text-align: center; flex-shrink: 0; margin-top: 1px; }
+  .pv-lbl {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 2px;
+  }
+  .pv-v { font-size: 12px; color: var(--white); font-weight: 500; min-height: 16px; line-height: 1.5; }
+  .pv-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+  .pv-chip {
+    background: var(--tag); border: 1px solid var(--border);
+    color: var(--accent2); font-size: 10px; font-weight: 600;
+    padding: 2px 7px; border-radius: 4px;
+  }
+
+  .pv-bar-wrap { margin-top: 18px; }
+  .pv-bar-top { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  .pv-bar-top strong { color: var(--accent2); }
+  .pv-bar { height: 4px; background: rgba(123,92,250,0.12); border-radius: 2px; overflow: hidden; }
+  .pv-fill {
+    height: 100%; background: linear-gradient(90deg, #7B5CFA, #A78BFA); border-radius: 2px;
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  @media (max-width: 900px) {
+    .inquiry { padding: 80px 24px; }
+    .inquiry-wrap { grid-template-columns: 1fr; gap: 36px; }
+    .iq-box { padding: 28px; }
+    .radio-grid2 { grid-template-columns: 1fr; }
+    .pv-col { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Alex<span>.</span></div>
+  <div class="lang-switcher">
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('sr')">SR</button>
+    <button class="lang-btn" onclick="setLang('hu')">HU</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag" data-en="Available for projects" data-sr="Dostupan za projekte" data-hu="Projektekre elérhető">
+    Available for projects
+  </div>
+  <h1>
+    <span data-en="Websites that" data-sr="Sajtovi koji" data-hu="Weboldalak,">Websites that</span><br>
+    <span class="grad" data-en="grow your business." data-sr="rastu vaš biznis." data-hu="amelyek növelik vállalkozásodat.">grow your business.</span>
+  </h1>
+  <p class="hero-sub" data-en="I build professional websites for cafes, hotels, barbershops, and local businesses. Clean design, fast delivery, great results." data-sr="Pravim profesionalne sajtove za kafiće, hotele, berbernice i lokalne biznise. Čist dizajn, brza isporuka, odlični rezultati." data-hu="Professzionális weboldalakat készítek kávézóknak, szállodáknak, borbélyüzleteknek és helyi vállalkozásoknak. Letisztult dizájn, gyors kivitelezés.">
+    I build professional websites for cafes, hotels, barbershops, and local businesses. Clean design, fast delivery, great results.
+  </p>
+  <div class="hero-cta">
+    <a href="#contact" class="btn-primary" data-en="Start a project →" data-sr="Pokreni projekat →" data-hu="Projekt indítása →">Start a project →</a>
+    <a href="#work" class="btn-ghost" data-en="See my work" data-sr="Pogledaj rad" data-hu="Munkáim megtekintése">See my work</a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span data-en="scroll" data-sr="skroluj" data-hu="görgess">scroll</span>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about fade-in">
+  <div class="about-text">
+    <div class="section-label" data-en="About me" data-sr="O meni" data-hu="Rólam">About me</div>
+    <h2 class="section-title" data-en="Young. Fast. Serious about results." data-sr="Mlad. Brz. Ozbiljan u rezultatima." data-hu="Fiatal. Gyors. Komoly eredményekre törekszik.">Young. Fast. Serious about results.</h2>
+    <p data-en="My name is <strong>Alex</strong>. I'm a web designer based in Serbia, building modern websites for local businesses who want to stand out online." data-sr="Zovem se <strong>Alex</strong>. Bavim se web dizajnom i pravim moderne sajtove za lokalne biznise koji žele da se istaknu online." data-hu="A nevem <strong>Alex</strong>. Szerbiai webdesigner vagyok, modern weboldalakat készítek helyi vállalkozásoknak, akik ki akarnak tűnni az interneten.">
+      My name is <strong>Alex</strong>. I'm a web designer based in Serbia, building modern websites for local businesses who want to stand out online.
+    </p>
+    <p data-en="Every site I build is custom — no templates, no shortcuts. Your business is unique and your website should be too." data-sr="Svaki sajt koji napravim je jedinstven — nema šablona, nema prečica. Vaš biznis je jedinstven i vaš sajt bi trebao biti isti." data-hu="Minden weboldal, amit készítek, egyedi — nincs sablon, nincs rövidítés. A vállalkozásod különleges, a weboldaladnak is annak kell lennie.">
+      Every site I build is custom — no templates, no shortcuts. Your business is unique and your website should be too.
+    </p>
+  </div>
+  <div class="about-stats">
+    <div class="stat-card">
+      <div class="stat-num">3+</div>
+      <div class="stat-label" data-en="Demo projects built" data-sr="Demo projekata" data-hu="Demo projektek">Demo projects built</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">3</div>
+      <div class="stat-label" data-en="Languages spoken" data-sr="Jezika" data-hu="Nyelvek">Languages spoken</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">100%</div>
+      <div class="stat-label" data-en="Custom code, no templates" data-sr="Bez šablona" data-hu="Sablon nélkül">Custom code, no templates</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">Fast</div>
+      <div class="stat-label" data-en="Delivery & communication" data-sr="Isporuka i komunikacija" data-hu="Átadás és kommunikáció">Delivery & communication</div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="work fade-in" id="work">
+  <div class="section-label" data-en="My work" data-sr="Moji radovi" data-hu="Munkáim">My work</div>
+  <h2 class="section-title" data-en="Recent projects" data-sr="Nedavni projekti" data-hu="Legutóbbi projektek">Recent projects</h2>
+
+  <div class="work-grid">
+
+    <!-- Cafe -->
+    <div class="project-card">
+      <a href="velvet-bean-cafe.html" target="_blank" class="card-preview cafe">
+        <div class="card-preview-label">Velvet Bean Café</div>
+      </a>
+      <div class="card-body">
+        <span class="card-type" data-en="Café" data-sr="Kafić" data-hu="Kávézó">Café</span>
+        <div class="card-title">Velvet Bean Café</div>
+        <div class="card-desc" data-en="A warm, elegant website for a specialty coffee shop. Full menu, gallery, and reservation section." data-sr="Topao, elegantan sajt za specijalizovanu kafeteriju. Kompletan meni, galerija i sekcija za rezervacije." data-hu="Meleg, elegáns weboldal egy specialty kávézó számára. Teljes menü, galéria és foglalási szekció.">
+          A warm, elegant website for a specialty coffee shop. Full menu, gallery, and reservation section.
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="tech-tag">HTML</span>
+        <span class="tech-tag">CSS</span>
+        <span class="tech-tag">JavaScript</span>
+        <a href="velvet-bean-cafe.html" target="_blank" class="card-link" data-en="View Project →" data-sr="Pogledaj →" data-hu="Megtekintés →">View Project →</a>
+      </div>
+    </div>
+
+    <!-- Barbershop -->
+    <div class="project-card">
+      <a href="blade-and-co-barbershop.html" target="_blank" class="card-preview barber">
+        <div class="card-preview-label">Blade & Co.</div>
+      </a>
+      <div class="card-body">
+        <span class="card-type" data-en="Barbershop" data-sr="Berbernica" data-hu="Borbélyüzlet">Barbershop</span>
+        <div class="card-title">Blade & Co. Barbershop</div>
+        <div class="card-desc" data-en="A bold, dark website for a premium barbershop. Services, pricing, and online booking built in." data-sr="Upečatljiv, tamni sajt za premium berbersku radnju. Usluge, cenovnik i online rezervacija." data-hu="Merész, sötét weboldal egy prémium borbélyüzletnek. Szolgáltatások, árak és online foglalás.">
+          A bold, dark website for a premium barbershop. Services, pricing, and online booking built in.
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="tech-tag">HTML</span>
+        <span class="tech-tag">CSS</span>
+        <span class="tech-tag">JavaScript</span>
+        <a href="blade-and-co-barbershop.html" target="_blank" class="card-link" data-en="View Project →" data-sr="Pogledaj →" data-hu="Megtekintés →">View Project →</a>
+      </div>
+    </div>
+
+    <!-- Store -->
+    <div class="project-card">
+      <a href="district-supply-store.html" target="_blank" class="card-preview store">
+        <div class="card-preview-label">District Supply</div>
+      </a>
+      <div class="card-body">
+        <span class="card-type" data-en="Retail Store" data-sr="Prodavnica" data-hu="Bolt">Retail Store</span>
+        <div class="card-title">District Supply Store</div>
+        <div class="card-desc" data-en="A clean, modern urban store website. Product showcase, categories, and contact integrated." data-sr="Čist, moderan sajt za urbanu prodavnicu. Prikaz proizvoda, kategorije i kontakt integrisani." data-hu="Letisztult, modern városi üzlet weboldal. Termékbemutató, kategóriák és kapcsolat integrálva.">
+          A clean, modern urban store website. Product showcase, categories, and contact integrated.
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="tech-tag">HTML</span>
+        <span class="tech-tag">CSS</span>
+        <span class="tech-tag">JavaScript</span>
+        <a href="district-supply-store.html" target="_blank" class="card-link" data-en="View Project →" data-sr="Pogledaj →" data-hu="Megtekintés →">View Project →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services fade-in">
+  <div class="section-label" data-en="What I offer" data-sr="Šta nudim" data-hu="Mit kínálok">What I offer</div>
+  <h2 class="section-title" data-en="Services" data-sr="Usluge" data-hu="Szolgáltatások">Services</h2>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🏪</div>
+      <div class="service-title" data-en="Business Website" data-sr="Poslovni sajt" data-hu="Üzleti weboldal">Business Website</div>
+      <div class="service-desc" data-en="Full website for your business — homepage, about, services, gallery, and contact. Ready to impress your customers." data-sr="Kompletan sajt za vaš biznis — naslovna, o nama, usluge, galerija i kontakt. Spreman da impresionira vaše klijente." data-hu="Teljes weboldal vállalkozásodnak — főoldal, bemutatkozás, szolgáltatások, galéria és kapcsolat.">
+        Full website for your business — homepage, about, services, gallery, and contact. Ready to impress your customers.
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📱</div>
+      <div class="service-title" data-en="Mobile Friendly" data-sr="Mobilno prilagođen" data-hu="Mobilbarát kialakítás">Mobile Friendly</div>
+      <div class="service-desc" data-en="All websites I build look perfect on phones, tablets, and computers. Your customers browse on mobile — I make sure it works." data-sr="Svi sajtovi koje pravim izgledaju savršeno na telefonima, tabletima i računarima. Vaši klijenti su na mobilnom — brinem se da radi." data-hu="Az általam készített weboldalak tökéletesen néznek ki telefonon, tableten és számítógépen is.">
+        All websites I build look perfect on phones, tablets, and computers. Your customers browse on mobile — I make sure it works.
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⚡</div>
+      <div class="service-title" data-en="Fast Delivery" data-sr="Brza isporuka" data-hu="Gyors átadás">Fast Delivery</div>
+      <div class="service-desc" data-en="I work fast and communicate clearly. You'll always know what's happening. Most projects are done in under a week." data-sr="Radim brzo i komuniciram jasno. Uvek ćete znati šta se dešava. Većina projekata je gotova za manje od nedelju dana." data-hu="Gyorsan dolgozom és érthetően kommunikálok. Mindig tudni fogod, mi történik. A legtöbb projekt egy héten belül elkészül.">
+        I work fast and communicate clearly. You'll always know what's happening. Most projects are done in under a week.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact fade-in" id="contact">
+  <div class="section-label" data-en="Get in touch" data-sr="Kontaktirajte me" data-hu="Vegyük fel a kapcsolatot">Get in touch</div>
+  <h2 class="section-title" data-en="Ready to build your website?" data-sr="Spremi da napravimo vaš sajt?" data-hu="Készen áll a weboldala elkészítésére?">Ready to build your website?</h2>
+  <div class="contact-box">
+    <p data-en="Tell me about your business and what you need. I'll get back to you fast." data-sr="Recite mi o svom biznisu i šta vam je potrebno. Odgovorim brzo." data-hu="Mondja el, miben segíthet! Gyorsan visszajelzek.">
+      Tell me about your business and what you need. I'll get back to you fast.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:loczyalex2.0@gmail.com" class="contact-link">
+        <span class="icon">✉️</span>
+        <span>loczyalex2.0@gmail.com</span>
+      </a>
+      <a href="https://instagram.com/NS_website16" target="_blank" class="contact-link">
+        <span class="icon">📸</span>
+        <span>@NS_website16</span>
+      </a>
+      <a href="https://wa.me/381369750450" target="_blank" class="contact-link">
+        <span class="icon">💬</span>
+        <span>WhatsApp</span>
+      </a>
+      <a href="https://facebook.com/YOUR_FACEBOOK" target="_blank" class="contact-link">
+        <span class="icon">🔵</span>
+        <span>Facebook</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- INQUIRY QUESTIONNAIRE -->
+<section class="inquiry fade-in" id="inquiry">
+  <div class="section-label" data-en="Get started" data-sr="Počni" data-hu="Kezdés">Get started</div>
+  <h2 class="section-title" data-en="Website brief" data-sr="Upitnik za sajt" data-hu="Weboldal kérdőív">Website brief</h2>
+
+  <div class="inquiry-wrap">
+
+    <!-- LEFT: FORM -->
+    <div>
+      <div class="iq-box" id="iqBox">
+
+        <!-- Honeypot — bots fill this, real users never see it -->
+        <input type="checkbox" name="botcheck" id="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+
+        <!-- 01 About you -->
+        <div class="iq-sec">
+          <div class="iq-sec-title" data-en="01 — About you" data-sr="01 — O vama" data-hu="01 — Rólad">01 — About you</div>
+          <div class="iq-grp">
+            <label class="iq-lbl"><span data-en="Your name" data-sr="Vaše ime" data-hu="Az Ön neve">Your name</span><span class="req">*</span></label>
+            <input class="iq-input" id="f-name" type="text"
+              data-ph-en="e.g. Marko Petrović" data-ph-sr="npr. Marko Petrović" data-ph-hu="pl. Kovács Péter"
+              placeholder="e.g. Marko Petrović">
+            <div class="iq-err" id="err-name" data-en="Please enter your name" data-sr="Unesite vaše ime" data-hu="Adja meg a nevét">Please enter your name</div>
+          </div>
+          <div class="iq-grp" style="margin-bottom:0">
+            <label class="iq-lbl"><span data-en="Business name" data-sr="Ime biznisa" data-hu="Vállalkozás neve">Business name</span><span class="req">*</span></label>
+            <input class="iq-input" id="f-biz" type="text"
+              data-ph-en="e.g. Café Roma" data-ph-sr="npr. Kafić Roma" data-ph-hu="pl. Róma Kávézó"
+              placeholder="e.g. Café Roma">
+            <div class="iq-err" id="err-biz" data-en="Please enter your business name" data-sr="Unesite ime biznisa" data-hu="Adja meg a vállalkozás nevét">Please enter your business name</div>
+          </div>
+        </div>
+
+        <!-- 02 Business type -->
+        <div class="iq-sec">
+          <div class="iq-sec-title" data-en="02 — Type of business" data-sr="02 — Vrsta biznisa" data-hu="02 — Vállalkozás típusa">02 — Type of business</div>
+          <div class="radio-grp">
+            <label class="radio-opt"><input type="radio" name="btype"><div class="radio-dot"></div><div><div class="ro-main">☕ <span data-en="Café / Restaurant" data-sr="Kafić / Restoran" data-hu="Kávézó / Étterem">Café / Restaurant</span></div></div></label>
+            <label class="radio-opt"><input type="radio" name="btype"><div class="radio-dot"></div><div><div class="ro-main">✂️ <span data-en="Barbershop / Salon" data-sr="Berbernica / Salon" data-hu="Borbélyüzlet / Szalon">Barbershop / Salon</span></div></div></label>
+            <label class="radio-opt"><input type="radio" name="btype"><div class="radio-dot"></div><div><div class="ro-main">🏨 <span data-en="Hotel / Accommodation" data-sr="Hotel / Smeštaj" data-hu="Hotel / Szállás">Hotel / Accommodation</span></div></div></label>
+            <label class="radio-opt"><input type="radio" name="btype"><div class="radio-dot"></div><div><div class="ro-main">🏪 <span data-en="Shop / Store" data-sr="Prodavnica / Shop" data-hu="Bolt / Üzlet">Shop / Store</span></div></div></label>
+            <label class="radio-opt"><input type="radio" name="btype" id="btypeOther"><div class="radio-dot"></div><div><div class="ro-main">📋 <span data-en="Other" data-sr="Drugo" data-hu="Egyéb">Other</span></div></div></label>
+          </div>
+
+          <div class="upload-wrap" id="otherTypeWrap">
+            <div class="iq-grp" style="margin-bottom:0">
+              <label class="iq-lbl"><span data-en="Please specify your type of business" data-sr="Navedite o kakvom biznisu je reč" data-hu="Kérjük, adja meg a vállalkozás típusát">Please specify your type of business</span></label>
+              <input class="iq-input" id="f-other-type" type="text"
+                data-ph-en="e.g. Bakery, gym, real estate agency..." data-ph-sr="npr. Pekara, teretana, agencija za nekretnine..." data-ph-hu="pl. Pékség, edzőterem, ingatlanügynökség..."
+                placeholder="e.g. Bakery, gym, real estate agency...">
+            </div>
+          </div>
+
+          <div class="iq-sub-lbl" data-en="Would you like a digital QR menu?" data-sr="Da li želite digitalni meni sa QR kodom?" data-hu="Szeretne digitális QR menüt?">Would you like a digital QR menu?</div>
+          <div class="iq-hint" data-en="Customers scan a QR code at the table and it opens your food/drink menu on their phone — no printed menus needed." data-sr="Mušterije skeniraju QR kod za stolom i to ih vodi na vaš meni za hranu/piće na telefonu — bez štampanih menija." data-hu="A vendégek beolvassák a QR-kódot az asztalnál, és megnyílik az étel-/itallap a telefonjukon — nincs szükség nyomtatott menüre.">Customers scan a QR code at the table and it opens your food/drink menu on their phone — no printed menus needed.</div>
+          <div class="radio-grp">
+            <label class="radio-opt"><input type="radio" name="qrmenu" value="yes"><div class="radio-dot"></div><div class="ro-main">✅ <span data-en="Yes, I'd like that" data-sr="Da, želim to" data-hu="Igen, szeretném">Yes, I'd like that</span></div></label>
+            <label class="radio-opt"><input type="radio" name="qrmenu" value="no"><div class="radio-dot"></div><div class="ro-main">❌ <span data-en="No, not needed" data-sr="Ne, nije potrebno" data-hu="Nem, nincs rá szükség">No, not needed</span></div></label>
+            <label class="radio-opt"><input type="radio" name="qrmenu" value="notsure"><div class="radio-dot"></div><div class="ro-main">🤔 <span data-en="Not sure — tell me more" data-sr="Nisam siguran/na — recite mi više" data-hu="Nem tudom — meséljen róla">Not sure — tell me more</span></div></label>
+          </div>
+        </div>
+
+        <!-- 03 Style / vibe -->
+        <div class="iq-sec">
+          <div class="iq-sec-title" data-en="03 — Desired look & feel" data-sr="03 — Željeni izgled" data-hu="03 — Stílus és hangulat">03 — Desired look & feel</div>
+          <div class="radio-grid2">
+            <label class="radio-opt"><input type="radio" name="vibe"><div class="radio-dot"></div><div><div class="ro-main" data-en="Modern & Minimal" data-sr="Moderan i minimalan" data-hu="Modern és minimál">Modern & Minimal</div><div class="ro-sub" data-en="Clean, simple, open space" data-sr="Čisto, jednostavno" data-hu="Tiszta, egyszerű">Clean, simple, open space</div></div></label>
+            <label class="radio-opt"><input type="radio" name="vibe"><div class="radio-dot"></div><div><div class="ro-main" data-en="Dark & Bold" data-sr="Tamno i upečatljivo" data-hu="Sötét és merész">Dark & Bold</div><div class="ro-sub" data-en="Dark bg, strong contrast" data-sr="Tamna pozadina, kontrast" data-hu="Sötét háttér, kontraszt">Dark bg, strong contrast</div></div></label>
+            <label class="radio-opt"><input type="radio" name="vibe"><div class="radio-dot"></div><div><div class="ro-main" data-en="Warm & Cozy" data-sr="Toplo i prijatno" data-hu="Meleg és hangulatos">Warm & Cozy</div><div class="ro-sub" data-en="Earthy tones, friendly feel" data-sr="Zemljani tonovi, opušteno" data-hu="Meleg színek, barátságos">Earthy tones, friendly feel</div></div></label>
+            <label class="radio-opt"><input type="radio" name="vibe"><div class="radio-dot"></div><div><div class="ro-main" data-en="Elegant & Classic" data-sr="Elegantno i klasično" data-hu="Elegáns és klasszikus">Elegant & Classic</div><div class="ro-sub" data-en="Premium, sophisticated" data-sr="Premium, sofisticirano" data-hu="Prémium, kifinomult">Premium, sophisticated</div></div></label>
+          </div>
+        </div>
+
+        <!-- 04 Sections needed -->
+        <div class="iq-sec">
+          <div class="iq-sec-title" data-en="04 — Pages / sections needed" data-sr="04 — Potrebne stranice" data-hu="04 — Szükséges szekciók">04 — Pages / sections needed</div>
+          <div class="check-grp" id="sectGrp">
+            <label class="check-opt"><input type="checkbox"><div class="check-box"></div><span data-en="Homepage" data-sr="Naslovna" data-hu="Főoldal">Homepage</span></label>
+            <label class="check-opt"><input type="checkbox"><div class="check-box"></div><span data-en="About" data-sr="O nama" data-hu="Rólunk">About</span></label>
+            <label class="check-opt"><input type="checkbox"><div class="check-box"></div><span data-en="Gallery" data-sr="Galerija" data-hu="Galéria">Gallery</span></label>
+            <label class="check-opt"><input type="checkbox"><div class="check-box"></div><span data-en="Booking" data-sr="Rezervacija" data-hu="Foglalás">Booking</span></label>
+            <label class="check-opt"><input type="checkbox"><div class="check-box"></div><span data-en="Pricing" data-sr="Cenovnik" data-hu="Árak">Pricing</span></label>
+            <label class="check-opt"><input type="checkbox"><div class="check-box"></div><span data-en="Contact" data-sr="Kontakt" data-hu="Kapcsolat">Contact</span></label>
+            <label class="check-opt"><input type="checkbox"><div class="check-box"></div><span data-en="Testimonials" data-sr="Recenzije" data-hu="Vélemények">Testimonials</span></label>
+          </div>
+        </div>
+
+        <!-- 05 Colors -->
+        <div class="iq-sec">
+          <div class="iq-sec-title" data-en="05 — Color preference" data-sr="05 — Boja pozadine" data-hu="05 — Szín preferencia">05 — Color preference</div>
+          <div class="radio-grp">
+            <label class="radio-opt"><input type="radio" name="color"><div class="radio-dot"></div><div class="ro-main" data-en="🌑 Dark background" data-sr="🌑 Tamna pozadina" data-hu="🌑 Sötét háttér">🌑 Dark background</div></label>
+            <label class="radio-opt"><input type="radio" name="color"><div class="radio-dot"></div><div class="ro-main" data-en="☀️ Light background" data-sr="☀️ Svetla pozadina" data-hu="☀️ Világos háttér">☀️ Light background</div></label>
+            <label class="radio-opt"><input type="radio" name="color"><div class="radio-dot"></div><div class="ro-main" data-en="🎨 Designer's choice" data-sr="🎨 Slobodan izbor" data-hu="🎨 Dizájner dönt">🎨 Designer's choice</div></label>
+          </div>
+        </div>
+
+        <!-- 06 Logo & photos -->
+        <div class="iq-sec">
+          <div class="iq-sec-title" data-en="06 — Logo & photos" data-sr="06 — Logo i fotografije" data-hu="06 — Logó és fotók">06 — Logo & photos</div>
+          <div class="iq-sub-lbl" data-en="Do you have a logo?" data-sr="Imate li logo?" data-hu="Van logója?">Do you have a logo?</div>
+          <div class="radio-grp" style="margin-bottom:20px">
+            <label class="radio-opt"><input type="radio" name="logo" value="yes"><div class="radio-dot"></div><div class="ro-main" data-en="✅ Yes, I have a logo" data-sr="✅ Da, imam logo" data-hu="✅ Igen, van logóm">✅ Yes, I have a logo</div></label>
+            <label class="radio-opt"><input type="radio" name="logo" value="no"><div class="radio-dot"></div><div class="ro-main" data-en="❌ No, I don't have one" data-sr="❌ Ne, nemam" data-hu="❌ Nem, nincs">❌ No, I don't have one</div></label>
+          </div>
+
+          <div class="upload-wrap" id="logoUploadWrap">
+            <div class="upload-box" id="logoUploadBox">
+              <div class="upload-box-txt">📎 <span data-en="Click to upload your logo" data-sr="Klikni da otpremiš logo" data-hu="Kattints a logó feltöltéséhez">Click to upload your logo</span></div>
+              <div class="upload-box-hint" data-en="PNG, JPG or SVG — max 5MB" data-sr="PNG, JPG ili SVG — maks. 5MB" data-hu="PNG, JPG vagy SVG — max 5MB">PNG, JPG or SVG — max 5MB</div>
+              <input type="file" id="logoFile" accept="image/*,.svg">
+            </div>
+            <div class="upload-thumbs" id="logoThumbs"></div>
+          </div>
+
+          <div class="iq-sub-lbl" data-en="Do you have photos?" data-sr="Imate li fotografije?" data-hu="Van fotója?">Do you have photos?</div>
+          <div class="radio-grp">
+            <label class="radio-opt"><input type="radio" name="photos" value="yes"><div class="radio-dot"></div><div class="ro-main" data-en="✅ Yes, I'll send photos" data-sr="✅ Da, daću fotografije" data-hu="✅ Igen, fogok küldeni">✅ Yes, I'll send photos</div></label>
+            <label class="radio-opt"><input type="radio" name="photos" value="partial"><div class="radio-dot"></div><div class="ro-main" data-en="🔶 Partially — some photos" data-sr="🔶 Delimično" data-hu="🔶 Részben">🔶 Partially — some photos</div></label>
+            <label class="radio-opt"><input type="radio" name="photos" value="no"><div class="radio-dot"></div><div class="ro-main" data-en="❌ No — please use stock" data-sr="❌ Ne — koristite stock" data-hu="❌ Nem — stock fotókat">❌ No — please use stock</div></label>
+          </div>
+
+          <div class="upload-wrap" id="photoUploadWrap">
+            <div class="upload-box" id="photoUploadBox">
+              <div class="upload-box-txt">📎 <span data-en="Click to upload photos" data-sr="Klikni da otpremiš slike" data-hu="Kattints a fotók feltöltéséhez">Click to upload photos</span></div>
+              <div class="upload-box-hint" data-en="Or send the rest later via WhatsApp / email — max 5MB each" data-sr="Ostale možeš poslati i kasnije preko WhatsApp-a / emaila — maks. 5MB po slici" data-hu="A többit később is küldheted WhatsAppon / emailben — max 5MB képenként">Or send the rest later via WhatsApp / email — max 5MB each</div>
+              <input type="file" id="photoFiles" accept="image/*" multiple>
+            </div>
+            <div class="upload-thumbs" id="photoThumbs"></div>
+          </div>
+
+          <div class="iq-sub-lbl" data-en="Do you need a Services / Menu section?" data-sr="Da li vam treba sekcija Usluge / Meni?" data-hu="Kell Szolgáltatások / Menü szekció?">Do you need a Services / Menu section?</div>
+          <div class="radio-grp">
+            <label class="radio-opt"><input type="radio" name="menu" value="yes"><div class="radio-dot"></div><div class="ro-main" data-en="✅ Yes" data-sr="✅ Da" data-hu="✅ Igen">✅ Yes</div></label>
+            <label class="radio-opt"><input type="radio" name="menu" value="no"><div class="radio-dot"></div><div class="ro-main" data-en="❌ No" data-sr="❌ Ne" data-hu="❌ Nem">❌ No</div></label>
+          </div>
+
+          <div class="upload-wrap" id="menuUploadWrap">
+            <div class="upload-box" id="menuUploadBox">
+              <div class="upload-box-txt">📎 <span data-en="Click to upload your menu" data-sr="Klikni da otpremiš meni" data-hu="Kattints a menü feltöltéséhez">Click to upload your menu</span></div>
+              <div class="upload-box-hint" data-en="Photo or PDF of your menu/price list — max 5MB" data-sr="Slika ili PDF menija/cenovnika — maks. 5MB" data-hu="Menü/árlista fotó vagy PDF — max 5MB">Photo or PDF of your menu/price list — max 5MB</div>
+              <input type="file" id="menuFile" accept="image/*,.pdf">
+            </div>
+            <div class="upload-thumbs" id="menuThumbs"></div>
+          </div>
+        </div>
+
+        <!-- 07 Timeline -->
+        <div class="iq-sec">
+          <div class="iq-sec-title" data-en="07 — When do you need it?" data-sr="07 — Kada vam je potrebno?" data-hu="07 — Mikor kell kész?">07 — When do you need it?</div>
+          <div class="radio-grp">
+            <label class="radio-opt"><input type="radio" name="timeline"><div class="radio-dot"></div><div class="ro-main" data-en="🔥 ASAP — as soon as possible" data-sr="🔥 Što pre — hitno" data-hu="🔥 Minél hamarabb">🔥 ASAP — as soon as possible</div></label>
+            <label class="radio-opt"><input type="radio" name="timeline"><div class="radio-dot"></div><div class="ro-main" data-en="📅 Within 1–2 days" data-sr="📅 Za 1–2 dana" data-hu="📅 1–2 napon belül">📅 Within 1–2 days</div></label>
+            <label class="radio-opt"><input type="radio" name="timeline"><div class="radio-dot"></div><div class="ro-main" data-en="😌 No rush — take your time" data-sr="😌 Nema žurbe" data-hu="😌 Ráér — nincs sietség">😌 No rush — take your time</div></label>
+          </div>
+        </div>
+
+        <button class="iq-btn" id="iqBtn" disabled>
+          <span data-en="Submit brief →" data-sr="Pošalji upit →" data-hu="Kérelem küldése →">Submit brief →</span>
+        </button>
+
+      </div>
+
+      <div class="iq-success" id="iqDone">
+        <div class="iq-success-icon">✅</div>
+        <div class="iq-success-title" data-en="Brief submitted!" data-sr="Upit poslat!" data-hu="Kérelem elküldve!">Brief submitted!</div>
+        <p class="iq-success-sub"
+          data-en="Your email app will open — just hit Send. I'll get back to you as soon as possible!"
+          data-sr="Vaša email aplikacija će se otvoriti — kliknite Pošalji. Odgovorim što pre!"
+          data-hu="Az e-mail alkalmazás megnyílik — kattints a Küldés gombra. Hamarosan visszajelzek!">
+          Your email app will open — just hit Send. I'll get back to you as soon as possible!</p>
+      </div>
+    </div>
+
+    <!-- RIGHT: LIVE PREVIEW -->
+    <div class="pv-col">
+      <div class="pv-eyebrow" data-en="Live Preview" data-sr="Pregled uživo" data-hu="Élő előnézet">Live Preview</div>
+      <div class="pv-card" id="pvCard">
+
+        <div class="pv-head">
+          <div class="pv-av" id="pvAv">?</div>
+          <div>
+            <div class="pv-n" id="pvN">—</div>
+            <div class="pv-b" id="pvB">—</div>
+          </div>
+        </div>
+
+        <div class="pv-row" id="pvTypeRow">
+          <div class="pv-ico">🏢</div><div><div class="pv-lbl" data-en="Business type" data-sr="Vrsta biznisa" data-hu="Típus">Business type</div><div class="pv-v" id="pvType">—</div></div>
+        </div>
+        <div class="pv-row" id="pvVibeRow">
+          <div class="pv-ico">🎨</div><div><div class="pv-lbl" data-en="Style" data-sr="Stil" data-hu="Stílus">Style</div><div class="pv-v" id="pvVibe">—</div></div>
+        </div>
+        <div class="pv-row" id="pvSectRow">
+          <div class="pv-ico">📄</div><div><div class="pv-lbl" data-en="Sections" data-sr="Sekcije" data-hu="Szekciók">Sections</div><div class="pv-chips" id="pvSect"></div></div>
+        </div>
+        <div class="pv-row" id="pvColorRow">
+          <div class="pv-ico">🌈</div><div><div class="pv-lbl" data-en="Colors" data-sr="Boje" data-hu="Színek">Colors</div><div class="pv-v" id="pvColor">—</div></div>
+        </div>
+        <div class="pv-row" id="pvAssetsRow">
+          <div class="pv-ico">🖼️</div><div><div class="pv-lbl" data-en="Logo / Photos" data-sr="Logo / Slike" data-hu="Logó / Fotók">Logo / Photos</div><div class="pv-v" id="pvAssets">—</div></div>
+        </div>
+        <div class="pv-row" id="pvTimeRow">
+          <div class="pv-ico">⏱️</div><div><div class="pv-lbl" data-en="Timeline" data-sr="Rok" data-hu="Határidő">Timeline</div><div class="pv-v" id="pvTime">—</div></div>
+        </div>
+        <div class="pv-row" id="pvQrRow">
+          <div class="pv-ico">📱</div><div><div class="pv-lbl" data-en="QR Menu" data-sr="QR Meni" data-hu="QR Menü">QR Menu</div><div class="pv-v" id="pvQr">—</div></div>
+        </div>
+
+        <div class="pv-bar-wrap">
+          <div class="pv-bar-top">
+            <span data-en="Completion" data-sr="Popunjenost" data-hu="Kitöltöttség">Completion</span>
+            <strong id="pvPct">0%</strong>
+          </div>
+          <div class="pv-bar"><div class="pv-fill" id="pvFill" style="width:0%"></div></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>© 2025 Alex — Web Designer</div>
+  <div data-en="Serbia · Available worldwide" data-sr="Srbija · Dostupan svuda" data-hu="Szerbia · Világszerte elérhető">Serbia · Available worldwide</div>
+</footer>
+
+<script>
+  // ── LANGUAGE SWITCHER ──
+  const translations = { en: {}, sr: {}, hu: {} };
+
+  function setLang(lang) {
+    document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+      el.innerHTML = el.getAttribute('data-' + lang);
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector('.lang-btn[onclick="setLang(\'' + lang + '\')"]').classList.add('active');
+    // placeholders
+    document.querySelectorAll('[data-ph-' + lang + ']').forEach(el => {
+      el.placeholder = el.getAttribute('data-ph-' + lang);
+    });
+  }
+
+  // ── SCROLL ANIMATIONS ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // ── QUESTIONNAIRE ──
+  (function () {
+    const fName = document.getElementById('f-name');
+    const fBiz  = document.getElementById('f-biz');
+    const fOtherType = document.getElementById('f-other-type');
+    const iqBtn = document.getElementById('iqBtn');
+
+    // radio: get selected label text from a group
+    function getRadioText(name) {
+      const opts = document.querySelectorAll('.radio-opt');
+      for (const o of opts) {
+        const inp = o.querySelector('input[name="' + name + '"]');
+        if (inp && o.classList.contains('sel')) {
+          const span = o.querySelector('.ro-main');
+          return span ? span.textContent.trim() : '';
+        }
+      }
+      return null;
+    }
+
+    // business type, with the free-text "Other" detail folded in
+    function getBtypeText() {
+      const base = getRadioText('btype');
+      if (!base) return null;
+      if (document.getElementById('btypeOther').checked && fOtherType.value.trim()) {
+        return base + ' — ' + fOtherType.value.trim();
+      }
+      return base;
+    }
+
+    function getChecked() {
+      return [...document.querySelectorAll('#sectGrp .check-opt.chkd')]
+        .map(o => o.querySelector('span').textContent.trim());
+    }
+
+    function initials(name) {
+      return name.trim().split(/\s+/).slice(0,2)
+        .map(w => w[0] ? w[0].toUpperCase() : '').join('') || '?';
+    }
+
+    function calcPct() {
+      let n = 0;
+      if (fName.value.trim()) n++;
+      if (fBiz.value.trim())  n++;
+      if (getBtypeText())           n++;
+      if (getRadioText('vibe'))     n++;
+      if (getChecked().length)      n++;
+      if (getRadioText('color'))    n++;
+      if (getRadioText('logo'))     n++;
+      if (getRadioText('photos'))   n++;
+      if (getRadioText('menu'))     n++;
+      if (getRadioText('timeline')) n++;
+      if (getRadioText('qrmenu'))   n++;
+      return Math.round((n / 11) * 100);
+    }
+
+    function setRow(id, filled) {
+      document.getElementById(id).classList.toggle('on', !!filled);
+    }
+
+    function updatePreview() {
+      const name  = fName.value.trim();
+      const biz   = fBiz.value.trim();
+      const btype = getBtypeText();
+      const vibe  = getRadioText('vibe');
+      const sects = getChecked();
+      const color = getRadioText('color');
+      const logo  = getRadioText('logo');
+      const photos= getRadioText('photos');
+      const menu  = getRadioText('menu');
+      const time  = getRadioText('timeline');
+      const qrmenu= getRadioText('qrmenu');
+
+      // Header
+      document.getElementById('pvAv').textContent = name ? initials(name) : '?';
+      document.getElementById('pvN').textContent  = name || '—';
+      document.getElementById('pvB').textContent  = biz  || '—';
+
+      // Rows
+      document.getElementById('pvType').textContent  = btype  || '—'; setRow('pvTypeRow', btype);
+      document.getElementById('pvVibe').textContent  = vibe   || '—'; setRow('pvVibeRow', vibe);
+      document.getElementById('pvSect').innerHTML = sects.length
+        ? sects.map(s => '<span class="pv-chip">' + s + '</span>').join('')
+        : ''; setRow('pvSectRow', sects.length);
+      document.getElementById('pvColor').textContent = color  || '—'; setRow('pvColorRow', color);
+      const assets = [logo, photos, menu ? ('Menu: ' + menu) : ''].filter(Boolean).join(' · ');
+      document.getElementById('pvAssets').textContent = assets || '—'; setRow('pvAssetsRow', logo || photos || menu);
+      document.getElementById('pvTime').textContent  = time   || '—'; setRow('pvTimeRow', time);
+      document.getElementById('pvQr').textContent  = qrmenu || '—'; setRow('pvQrRow', qrmenu);
+
+      // Progress
+      const pct = calcPct();
+      document.getElementById('pvFill').style.width = pct + '%';
+      document.getElementById('pvPct').textContent  = pct + '%';
+      document.getElementById('pvCard').classList.toggle('alive', pct > 0);
+
+      // Button enable: only name + biz required
+      iqBtn.disabled = !(fName.value.trim() && fBiz.value.trim());
+    }
+
+    // ── LOGO / PHOTO UPLOAD STATE ──
+    let logoFileData = null;
+    let photoFilesData = [];
+    let menuFileData = null;
+    const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+
+    function syncUploadVisibility() {
+      const logoChecked = document.querySelector('input[name="logo"]:checked');
+      document.getElementById('logoUploadWrap')
+        .classList.toggle('show', !!logoChecked && logoChecked.value === 'yes');
+
+      const photoChecked = document.querySelector('input[name="photos"]:checked');
+      document.getElementById('photoUploadWrap')
+        .classList.toggle('show', !!photoChecked && (photoChecked.value === 'yes' || photoChecked.value === 'partial'));
+
+      const menuChecked = document.querySelector('input[name="menu"]:checked');
+      document.getElementById('menuUploadWrap')
+        .classList.toggle('show', !!menuChecked && menuChecked.value === 'yes');
+    }
+
+    function syncOtherTypeVisibility() {
+      document.getElementById('otherTypeWrap')
+        .classList.toggle('show', document.getElementById('btypeOther').checked);
+    }
+
+    function addThumb(container, file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const div = document.createElement('div');
+        div.className = 'upload-thumb';
+        const img = document.createElement('img');
+        img.src = ev.target.result;
+        div.appendChild(img);
+        container.appendChild(div);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    document.getElementById('logoFile').addEventListener('change', (e) => {
+      const thumbs = document.getElementById('logoThumbs');
+      thumbs.innerHTML = '';
+      const file = e.target.files[0];
+      if (!file) { logoFileData = null; return; }
+      if (file.size > MAX_SIZE) {
+        alert('Max 5MB');
+        e.target.value = '';
+        logoFileData = null;
+        return;
+      }
+      logoFileData = file;
+      addThumb(thumbs, file);
+    });
+
+    document.getElementById('photoFiles').addEventListener('change', (e) => {
+      const thumbs = document.getElementById('photoThumbs');
+      thumbs.innerHTML = '';
+      const files = Array.from(e.target.files).filter(f => f.size <= MAX_SIZE);
+      if (files.length < e.target.files.length) alert('Some files were skipped — max 5MB each');
+      photoFilesData = files.slice(0, 4); // cap to keep submissions light
+      photoFilesData.forEach(f => addThumb(thumbs, f));
+    });
+
+    document.getElementById('menuFile').addEventListener('change', (e) => {
+      const thumbs = document.getElementById('menuThumbs');
+      thumbs.innerHTML = '';
+      const file = e.target.files[0];
+      if (!file) { menuFileData = null; return; }
+      if (file.size > MAX_SIZE) {
+        alert('Max 5MB');
+        e.target.value = '';
+        menuFileData = null;
+        return;
+      }
+      menuFileData = file;
+      if (file.type.startsWith('image/')) addThumb(thumbs, file);
+    });
+
+    // Radio select — sync visual 'sel' class from the input's real checked
+    // state via the native 'change' event (fires exactly once per click,
+    // even though labels containing inputs cause the browser to dispatch
+    // a click on both the label AND the input).
+    document.querySelectorAll('input[type="radio"]').forEach(input => {
+      input.addEventListener('change', () => {
+        const group = input.name;
+        document.querySelectorAll('input[name="' + group + '"]').forEach(i => {
+          i.closest('.radio-opt').classList.toggle('sel', i.checked);
+        });
+        if (group === 'logo' || group === 'photos' || group === 'menu') syncUploadVisibility();
+        if (group === 'btype') syncOtherTypeVisibility();
+        updatePreview();
+      });
+    });
+
+    // Checkbox toggle — same idea, driven by 'change' instead of 'click'
+    // so a single tap can't fire twice and cancel itself out.
+    document.querySelectorAll('#sectGrp input[type="checkbox"]').forEach(input => {
+      input.addEventListener('change', () => {
+        input.closest('.check-opt').classList.toggle('chkd', input.checked);
+        updatePreview();
+      });
+    });
+
+    [fName, fBiz, fOtherType].forEach(el => el.addEventListener('input', updatePreview));
+
+    // Inline blur validation
+    fName.addEventListener('blur', () => {
+      const ok = !!fName.value.trim();
+      fName.classList.toggle('err', !ok);
+      document.getElementById('err-name').classList.toggle('show', !ok);
+    });
+    fBiz.addEventListener('blur', () => {
+      const ok = !!fBiz.value.trim();
+      fBiz.classList.toggle('err', !ok);
+      document.getElementById('err-biz').classList.toggle('show', !ok);
+    });
+
+    iqBtn.addEventListener('click', function () {
+      // Honeypot check — if this hidden checkbox got checked, it's a bot.
+      // Real visitors never see or touch it.
+      if (document.getElementById('botcheck').checked) {
+        return;
+      }
+
+      let valid = true;
+      if (!fName.value.trim()) {
+        fName.classList.add('err');
+        document.getElementById('err-name').classList.add('show');
+        valid = false;
+      }
+      if (!fBiz.value.trim()) {
+        fBiz.classList.add('err');
+        document.getElementById('err-biz').classList.add('show');
+        valid = false;
+      }
+      if (!valid) return;
+
+      const btype  = getBtypeText()           || 'Not specified';
+      const vibe   = getRadioText('vibe')     || 'Not specified';
+      const sects  = getChecked();
+      const color  = getRadioText('color')    || 'Not specified';
+      const logo   = getRadioText('logo')     || 'Not specified';
+      const photos = getRadioText('photos')   || 'Not specified';
+      const menu   = getRadioText('menu')     || 'Not specified';
+      const time   = getRadioText('timeline') || 'Not specified';
+      const qrmenu = getRadioText('qrmenu')   || 'Not specified';
+
+      const message =
+        'New website brief from your portfolio.\n\n' +
+        '━━━━━━━━━━━━━━━━━━━━━━\n' +
+        'Name:          ' + fName.value.trim() + '\n' +
+        'Business:      ' + fBiz.value.trim()  + '\n' +
+        'Type:          ' + btype  + '\n' +
+        'Style/vibe:    ' + vibe   + '\n' +
+        'Sections:      ' + (sects.length ? sects.join(', ') : 'Not specified') + '\n' +
+        'Colors:        ' + color  + '\n' +
+        'Logo:          ' + logo   + '\n' +
+        'Photos:        ' + photos + '\n' +
+        'Menu:          ' + menu   + '\n' +
+        'Timeline:      ' + time   + '\n' +
+        'QR Menu:       ' + qrmenu + '\n' +
+        '━━━━━━━━━━━━━━━━━━━━━━\n' +
+        'Sent from: loczyalex20-ai.github.io';
+
+      // ── AUTO-SEND VIA WEB3FORMS (no mail app needed) ──
+      // Access key from https://web3forms.com — WHERE the email lands is
+      // controlled by your Web3Forms dashboard, NOT by this code.
+      const WEB3FORMS_ACCESS_KEY = '1d5fe60b-ca5d-4186-bac7-3ff34592fb40';
+
+      const originalBtnHTML = iqBtn.innerHTML;
+      iqBtn.disabled = true;
+      iqBtn.innerHTML = '<span>Sending…</span>';
+
+      function showSuccess() {
+        const box = document.getElementById('iqBox');
+        box.style.opacity = '0.2';
+        box.style.pointerEvents = 'none';
+        document.getElementById('iqDone').classList.add('show');
+
+        const sub = document.querySelector('.iq-success-sub');
+        if ((photos === '🔶 Partially — some photos' || /partial/i.test(photos)) ||
+            (!logoFileData && /yes/i.test(logo)) ||
+            (photoFilesData.length === 0 && /yes|partial/i.test(photos)) ||
+            (!menuFileData && /yes/i.test(menu))) {
+          sub.insertAdjacentHTML('beforeend',
+            '<br><br>📎 ' +
+            'Don\'t forget to send any remaining logo/photo/menu files via WhatsApp or email (+381 369 750 450 / loczyalex2.0@gmail.com).');
+        }
+      }
+
+      function fallbackToMailto(reason) {
+        if (reason) console.warn('Web3Forms fallback triggered:', reason);
+        const sub  = encodeURIComponent('Website Brief — ' + fBiz.value.trim());
+        const body = encodeURIComponent('Hello Alex!\n\n' + message);
+        window.location.href = 'mailto:loczyalex2.0@gmail.com?subject=' + sub + '&body=' + body;
+        showSuccess();
+      }
+
+      const fd = new FormData();
+      fd.append('access_key', WEB3FORMS_ACCESS_KEY);
+      fd.append('subject', 'Website Brief — ' + fBiz.value.trim());
+      fd.append('from_name', fName.value.trim());
+      fd.append('botcheck', '');
+      fd.append('message', message);
+
+      if (logoFileData) fd.append('attachment', logoFileData);
+      photoFilesData.slice(0, logoFileData ? 2 : 3).forEach((file, i) => {
+        fd.append(i === 0 && !logoFileData ? 'attachment' : 'attachment' + (i + 2), file);
+      });
+      if (menuFileData) fd.append('attachment_menu', menuFileData);
+
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: fd
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log('Web3Forms response:', data);
+          if (data.success) {
+            showSuccess();
+          } else {
+            fallbackToMailto(data.message || 'success:false');
+          }
+        })
+        .catch((err) => {
+          fallbackToMailto(err);
+        })
+        .finally(() => {
+          iqBtn.disabled = false;
+          iqBtn.innerHTML = originalBtnHTML;
+        });
+    });
+  })();
+</script>
+
+</body>
+</html>
