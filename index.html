@@ -999,9 +999,32 @@
           </div>
         </div>
 
-        <!-- 07 Timeline -->
+        <!-- 07 Address, hours & phone -->
         <div class="iq-sec">
-          <div class="iq-sec-title" data-en="07 — When do you need it?" data-sr="07 — Kada vam je potrebno?" data-hu="07 — Mikor kell kész?">07 — When do you need it?</div>
+          <div class="iq-sec-title" data-en="07 — Address, hours & phone" data-sr="07 — Adresa, radno vreme i telefon" data-hu="07 — Cím, nyitvatartás és telefon">07 — Address, hours & phone</div>
+          <div class="iq-grp">
+            <label class="iq-lbl"><span data-en="Business address" data-sr="Adresa biznisa" data-hu="Vállalkozás címe">Business address</span></label>
+            <input class="iq-input" id="f-address" type="text"
+              data-ph-en="e.g. Bulevar Oslobođenja 12, Novi Sad" data-ph-sr="npr. Bulevar Oslobođenja 12, Novi Sad" data-ph-hu="pl. Bulevar Oslobođenja 12, Novi Sad"
+              placeholder="e.g. Bulevar Oslobođenja 12, Novi Sad">
+          </div>
+          <div class="iq-grp">
+            <label class="iq-lbl"><span data-en="Working hours" data-sr="Radno vreme" data-hu="Nyitvatartás">Working hours</span></label>
+            <input class="iq-input" id="f-hours" type="text"
+              data-ph-en="e.g. Mon–Sat 08:00–22:00" data-ph-sr="npr. Pon–Sub 08:00–22:00" data-ph-hu="pl. H–Szo 08:00–22:00"
+              placeholder="e.g. Mon–Sat 08:00–22:00">
+          </div>
+          <div class="iq-grp" style="margin-bottom:0">
+            <label class="iq-lbl"><span data-en="Phone number" data-sr="Broj telefona" data-hu="Telefonszám">Phone number</span></label>
+            <input class="iq-input" id="f-phone" type="text"
+              data-ph-en="e.g. 06X XXX XXXX" data-ph-sr="npr. 06X XXX XXXX" data-ph-hu="pl. 06X XXX XXXX"
+              placeholder="e.g. 06X XXX XXXX">
+          </div>
+        </div>
+
+        <!-- 08 Timeline -->
+        <div class="iq-sec">
+          <div class="iq-sec-title" data-en="08 — When do you need it?" data-sr="08 — Kada vam je potrebno?" data-hu="08 — Mikor kell kész?">08 — When do you need it?</div>
           <div class="radio-grp">
             <label class="radio-opt"><input type="radio" name="timeline"><div class="radio-dot"></div><div class="ro-main" data-en="🔥 ASAP — as soon as possible" data-sr="🔥 Što pre — hitno" data-hu="🔥 Minél hamarabb">🔥 ASAP — as soon as possible</div></label>
             <label class="radio-opt"><input type="radio" name="timeline"><div class="radio-dot"></div><div class="ro-main" data-en="📅 Within 1–2 days" data-sr="📅 Za 1–2 dana" data-hu="📅 1–2 napon belül">📅 Within 1–2 days</div></label>
@@ -1053,6 +1076,15 @@
         </div>
         <div class="pv-row" id="pvAssetsRow">
           <div class="pv-ico">🖼️</div><div><div class="pv-lbl" data-en="Logo / Photos" data-sr="Logo / Slike" data-hu="Logó / Fotók">Logo / Photos</div><div class="pv-v" id="pvAssets">—</div></div>
+        </div>
+        <div class="pv-row" id="pvAddressRow">
+          <div class="pv-ico">📍</div><div><div class="pv-lbl" data-en="Address" data-sr="Adresa" data-hu="Cím">Address</div><div class="pv-v" id="pvAddress">—</div></div>
+        </div>
+        <div class="pv-row" id="pvHoursRow">
+          <div class="pv-ico">🕒</div><div><div class="pv-lbl" data-en="Hours" data-sr="Radno vreme" data-hu="Nyitvatartás">Hours</div><div class="pv-v" id="pvHours">—</div></div>
+        </div>
+        <div class="pv-row" id="pvPhoneRow">
+          <div class="pv-ico">📞</div><div><div class="pv-lbl" data-en="Phone" data-sr="Telefon" data-hu="Telefon">Phone</div><div class="pv-v" id="pvPhone">—</div></div>
         </div>
         <div class="pv-row" id="pvTimeRow">
           <div class="pv-ico">⏱️</div><div><div class="pv-lbl" data-en="Timeline" data-sr="Rok" data-hu="Határidő">Timeline</div><div class="pv-v" id="pvTime">—</div></div>
@@ -1108,6 +1140,9 @@
     const fName = document.getElementById('f-name');
     const fBiz  = document.getElementById('f-biz');
     const fOtherType = document.getElementById('f-other-type');
+    const fAddress = document.getElementById('f-address');
+    const fHours = document.getElementById('f-hours');
+    const fPhone = document.getElementById('f-phone');
     const iqBtn = document.getElementById('iqBtn');
 
     // radio: get selected label text from a group
@@ -1156,7 +1191,10 @@
       if (getRadioText('menu'))     n++;
       if (getRadioText('timeline')) n++;
       if (getRadioText('qrmenu'))   n++;
-      return Math.round((n / 11) * 100);
+      if (fAddress.value.trim())    n++;
+      if (fHours.value.trim())      n++;
+      if (fPhone.value.trim())      n++;
+      return Math.round((n / 14) * 100);
     }
 
     function setRow(id, filled) {
@@ -1175,6 +1213,9 @@
       const menu  = getRadioText('menu');
       const time  = getRadioText('timeline');
       const qrmenu= getRadioText('qrmenu');
+      const address = fAddress.value.trim();
+      const hours   = fHours.value.trim();
+      const phone   = fPhone.value.trim();
 
       // Header
       document.getElementById('pvAv').textContent = name ? initials(name) : '?';
@@ -1192,6 +1233,9 @@
       document.getElementById('pvAssets').textContent = assets || '—'; setRow('pvAssetsRow', logo || photos || menu);
       document.getElementById('pvTime').textContent  = time   || '—'; setRow('pvTimeRow', time);
       document.getElementById('pvQr').textContent  = qrmenu || '—'; setRow('pvQrRow', qrmenu);
+      document.getElementById('pvAddress').textContent = address || '—'; setRow('pvAddressRow', address);
+      document.getElementById('pvHours').textContent   = hours   || '—'; setRow('pvHoursRow', hours);
+      document.getElementById('pvPhone').textContent   = phone   || '—'; setRow('pvPhoneRow', phone);
 
       // Progress
       const pct = calcPct();
@@ -1305,7 +1349,7 @@
       });
     });
 
-    [fName, fBiz, fOtherType].forEach(el => el.addEventListener('input', updatePreview));
+    [fName, fBiz, fOtherType, fAddress, fHours, fPhone].forEach(el => el.addEventListener('input', updatePreview));
 
     // Inline blur validation
     fName.addEventListener('blur', () => {
@@ -1348,12 +1392,18 @@
       const menu   = getRadioText('menu')     || 'Not specified';
       const time   = getRadioText('timeline') || 'Not specified';
       const qrmenu = getRadioText('qrmenu')   || 'Not specified';
+      const address = fAddress.value.trim() || 'Not specified';
+      const hours   = fHours.value.trim()   || 'Not specified';
+      const phone   = fPhone.value.trim()   || 'Not specified';
 
       const message =
         'New website brief from your portfolio.\n\n' +
         '━━━━━━━━━━━━━━━━━━━━━━\n' +
         'Name:          ' + fName.value.trim() + '\n' +
         'Business:      ' + fBiz.value.trim()  + '\n' +
+        'Address:       ' + address + '\n' +
+        'Working hours: ' + hours   + '\n' +
+        'Phone:         ' + phone   + '\n' +
         'Type:          ' + btype  + '\n' +
         'Style/vibe:    ' + vibe   + '\n' +
         'Sections:      ' + (sects.length ? sects.join(', ') : 'Not specified') + '\n' +
